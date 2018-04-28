@@ -234,7 +234,28 @@
         this.on('mount', function() {
 
             if (opts.components && App.Utils.isObject(opts.components)) {
-                this.components = App.$.extend(true, this.components, opts.components);
+				
+				if(opts.allowed_fields){
+					//create object to store valid components
+					var allowed_components = {};
+					Object.keys(this.components).forEach(function (i ) {
+							//console.log(this.components[i].name + " ***  " + opts.allowed_fields)
+							if(opts.allowed_fields.includes(i)){
+									
+									//store allowed components in allowed_components new object
+									allowed_components[i] =  $this.components[i]  ;  
+									 
+							}						 
+						});
+						//console.log(allowed_components);
+						//console.log(this.components);
+					this.components = App.$.extend(true, allowed_components , opts.components);
+					//rewrite $this.components
+					$this.components = this.components ;
+				}
+				else{
+					this.components = App.$.extend(true, this.components, opts.components);
+				}
             }
 
             Object.keys(this.components).forEach(function(k) {
