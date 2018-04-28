@@ -5,6 +5,7 @@
  */
 define('COCKPIT_START_TIME', microtime(true));
 
+
 if (!defined('COCKPIT_CLI')) define('COCKPIT_CLI', PHP_SAPI == 'cli');
 
 /*
@@ -15,6 +16,7 @@ spl_autoload_register(function($class){
     $class_path = __DIR__.'/lib/'.str_replace('\\', '/', $class).'.php';
     if(file_exists($class_path)) include_once($class_path);
 });
+
 
 // check for custom defines
 if (file_exists(__DIR__.'/defines.php')) {
@@ -36,7 +38,7 @@ if (strpos($COCKPIT_DIR, $COCKPIT_DOCS_ROOT)!==0 && isset($_SERVER['SCRIPT_NAME'
 $COCKPIT_BASE        = trim(str_replace($COCKPIT_DOCS_ROOT, '', $COCKPIT_DIR), "/");
 $COCKPIT_BASE_URL    = strlen($COCKPIT_BASE) ? "/{$COCKPIT_BASE}": $COCKPIT_BASE;
 $COCKPIT_BASE_ROUTE  = $COCKPIT_BASE_URL;
-
+ ;
 /*
  * SYSTEM DEFINES
  */
@@ -50,13 +52,11 @@ if (!defined('COCKPIT_BASE_URL'))               define('COCKPIT_BASE_URL'       
 if (!defined('COCKPIT_BASE_ROUTE'))             define('COCKPIT_BASE_ROUTE'     , $COCKPIT_BASE_ROUTE);
 if (!defined('COCKPIT_STORAGE_FOLDER'))         define('COCKPIT_STORAGE_FOLDER' , COCKPIT_DIR.'/storage');
 if (!defined('COCKPIT_PUBLIC_STORAGE_FOLDER'))  define('COCKPIT_PUBLIC_STORAGE_FOLDER' , COCKPIT_DIR.'/storage');
-
+ 
 if (!defined('COCKPIT_CONFIG_PATH')) {
     $_configpath = COCKPIT_CONFIG_DIR.'/config.'.(file_exists(COCKPIT_CONFIG_DIR.'/config.php') ? 'php':'yaml');
     define('COCKPIT_CONFIG_PATH', $_configpath);
-}
-
-
+} 
 function cockpit($module = null) {
 
     static $app;
@@ -96,6 +96,7 @@ function cockpit($module = null) {
                 '#modules'  => COCKPIT_DIR.'/modules',
                 '#addons'   => COCKPIT_DIR.'/addons',
                 '#config'   => COCKPIT_CONFIG_DIR,
+                '#client'   => COCKPIT_CLIENT_FOLDER, // cockpit client folder root
                 'assets'    => COCKPIT_DIR.'/assets',
                 'site'      => COCKPIT_SITE_DIR
             ]
@@ -144,12 +145,12 @@ function cockpit($module = null) {
             COCKPIT_DIR.'/modules',  # core
             COCKPIT_DIR.'/addons' # addons
         ], isset($config['loadmodules']) ? (array) $config['loadmodules'] : []));
-
+ 
         // load config global bootstrap
         if ($custombootfile = $app->path('#config:bootstrap.php')) {
             include($custombootfile);
         }
-
+//d($app);
         $app->trigger('cockpit.bootstrap');
     }
 
