@@ -23,7 +23,7 @@
                 this.slug = this.$getValue(opts.bind+'_slug') || '';
             }
 
-            (['maxlength', 'minlength', 'step', 'placeholder', 'pattern', 'size']).forEach( function(key) {
+            (['readonly', 'maxlength', 'minlength', 'step', 'placeholder', 'pattern', 'size']).forEach( function(key) {
                 if (opts[key]) $this.refs.input.setAttribute(key, opts[key]);
             });
 
